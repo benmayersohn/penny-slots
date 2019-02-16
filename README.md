@@ -11,3 +11,5 @@ The slots at the casino we go to roughly pay out 95\% of the money they take in 
 We will study two kinds of machines that vary in what is called **volatility** - basically the payout variance. Highly volatile machines pay out big but rarely, while low-volatility machines distribute small payouts more often but the jackpot is not as large. Low-volatility machines have become quite popular with casino owners in Vegas as the small payouts keep people hooked and playing for longer.
 
 We will run many simulations on these types of machines, and see how the results change with our betting strategies. We will also consider what happens if we change the best size as we win, to see if we can improve our average returns.
+
+You can view the Jupyter notebook with the results [here](https://nbviewer.jupyter.org/github/benmayersohn/penny-slots/blob/master/gambling.ipynb).
