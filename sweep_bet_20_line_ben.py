@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 load_file = False
-filename = 'strategies_1line_sweepwagers.npz'
+filename = 'strategies_20line_ben_sweepwagers.npz'
 
 costs = np.linspace(.05, 0.3, 26)  # from a 5 cent bet to a 30 cent bet
 num_sweeps = len(costs)
@@ -39,7 +39,7 @@ if load_file:
     avg_plays = results['avg_plays']
     avg_spent = results['avg_spent']  # total spent; positive number
 else:
-    cleo = CleopatraModel(nlines=1)
+    cleo = CleopatraModel()
 
     for i, cost_per_bet in enumerate(costs):
         max_loss_per_session = 3 * cost_per_bet
@@ -51,7 +51,8 @@ else:
             total_num_games = 0
             while spending_money > cost_per_bet and time_played < time_max:
                 time_played += transition_time
-                output = cleo.one_session(spending_money, cost_per_bet, max_loss_per_session, time_max - time_played, walk_away_win)
+                output = cleo.one_session(spending_money, cost_per_bet, max_loss_per_session, time_max - time_played,
+                                          walk_away_win)
                 total_num_games += output[0]
                 time_played += output[0] * cleo.time_per_spin
                 total_won += output[1]

@@ -3,6 +3,9 @@ __pycache__/
 *$py.class
 .ipynb_checkpoints
 .idea/
+opt_relative*
+strategies_20line_lori_sweepwagers.npz
+strategies_1line_lori_sweepwagers.npz
 
 # temporary files
 *~

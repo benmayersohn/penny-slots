@@ -1,12 +1,10 @@
 # A model of the Cleopatra slot machine
-# We will compute a probability distribution for each of the winning types
-# Question: How does switching more often improve odds?
-# Hypothesis: You lose less because you play less in the same amount of time!
 # Data from Wizard of Odds (https://wizardofodds.com/games/slots/cleopatra/)
 # and Casino Guru (https://casino.guru/cleopatra-slot-math)
 
 import numpy as np
 import scipy.stats as st
+
 
 # Generic slots class
 class SlotsModel(object):
@@ -31,7 +29,6 @@ class SlotsModel(object):
         if self.model is None:
             self.construct_model()
 
-        rv = st.uniform.rvs()
         index = self.model.rvs()
         if index == 0:
             return 0
@@ -40,33 +37,41 @@ class SlotsModel(object):
         winnings = cost_per_bet * (interval[0] + st.uniform.rvs() * (interval[1] - interval[0]))
         return winnings
 
-    def one_session(self, money_in, cost_per_bet, max_loss_per_session, time_limit, walk_away_win, initial_money=None, winning_bet=None, change_bet_win=None):
+    def one_session(self, money_in, wager, max_loss_per_session, time_limit, walk_away_win, wager_type='absolute',
+    initial_money=None, winning_bet=None, change_bet_win=None):
+
+        def wager_calc(w, money):
+           return w if wager_type == 'absolute' else max(.01, w * money)
+
         total_won = 0
         total_spins = 0
         total_spent = 0
         time_elapsed = 0
         net = 0
-        wager = cost_per_bet
+        spending_money = money_in
         betting_higher = False
-        while net + max_loss_per_session > 0 and net + money_in > 0 and time_elapsed < time_limit:
-            result = self.one_play(wager)
+
+        cost_per_bet = wager_calc(wager, spending_money)
+
+        while net + max_loss_per_session > 0 and spending_money > cost_per_bet and time_elapsed < time_limit:
+            result = self.one_play(cost_per_bet)
             time_elapsed += self.time_per_spin
             total_spins += 1
             total_won += result
-            total_spent += wager
+            total_spent += cost_per_bet
             net = total_won - total_spent
+            spending_money += net
 
-            if change_bet_win is not None:
-                if winning_bet is not None:
-                    if money_in + net >= initial_money + change_bet_win and not betting_higher:
-                        wager = winning_bet
-                        betting_higher = True
-                    if money_in + net < initial_money and betting_higher:
-                        wager = cost_per_bet
-                        betting_higher = False
-                else:
-                    if money_in + net >= initial_money + change_bet_win:  # cash out
-                        break
+            # if you want to change your wager when exceeding a threshold, and change it back when you're down again
+            if None not in (change_bet_win, winning_bet, initial_money):
+                if money_in + net >= initial_money + change_bet_win and not betting_higher:
+                    betting_higher = True
+                if money_in + net < initial_money and betting_higher:
+                    betting_higher = False
+
+                cost_per_bet = wager_calc(winning_bet if betting_higher else wager, spending_money)
+            else:
+                cost_per_bet = wager_calc(wager, spending_money)  # recalculate wager based on spending money
 
             if result > walk_away_win:
                 return total_spins, total_won, total_spent

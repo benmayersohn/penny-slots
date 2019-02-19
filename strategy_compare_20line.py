@@ -48,7 +48,8 @@ else:
             total_num_games = 0
             while spending_money > cost_per_bet[i] and time_played < time_max:
                 time_played += transition_time
-                output = cleo.one_session(spending_money, cost_per_bet[i], max_loss_per_session[i], time_max - time_played, walk_away_win[i])
+                output = cleo.one_session(spending_money, cost_per_bet[i], max_loss_per_session[i],
+                                          time_max - time_played, walk_away_win[i])
                 total_num_games += output[0]
                 time_played += output[0] * cleo.time_per_spin
                 total_won += output[1]
