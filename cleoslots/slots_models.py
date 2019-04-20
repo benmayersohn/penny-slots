@@ -1,6 +1,10 @@
-# A model of the Cleopatra slot machine
-# Data from Wizard of Odds (https://wizardofodds.com/games/slots/cleopatra/)
-# and Casino Guru (https://casino.guru/cleopatra-slot-math)
+"""
+A generic class for slot machines (SlotModels) + a subclass for the Cleopatra slot machine (CleopatraModel)
+The CleopatraModel class allows for play on 1 line or all 20 lines (though the real game allows for more choices)
+
+Probability distribution data from Casino Guru (https://casino.guru/cleopatra-slot-math)
+Info about RTP from Wizard of Odds (https://wizardofodds.com/games/slots/cleopatra/)
+"""
 
 import numpy as np
 import scipy.stats as st
@@ -8,12 +12,13 @@ import scipy.stats as st
 
 # Generic slots class
 class SlotsModel(object):
-    '''
+    """
     intervals: intervals corresponding to categories of win, as multiple of input $
     probabilities: probability of falling in corresponding interval
     name: Name of slots machine
     model: constructed from intervals/probabilities
-    '''
+    """
+
     def __init__(self, name, intervals, probabilities, time_per_spin):
         self.intervals = intervals
         self.name = name
@@ -21,9 +26,11 @@ class SlotsModel(object):
         self.time_per_spin = time_per_spin
         self.model = None
 
+    # Create the model as a discrete PMF
     def construct_model(self):
         self.model = st.rv_discrete(name=self.name, values=(np.arange(len(self.probabilities)), self.probabilities))
 
+    # Play the slot machine once
     def one_play(self, cost_per_bet):
 
         if self.model is None:
@@ -37,11 +44,12 @@ class SlotsModel(object):
         winnings = cost_per_bet * (interval[0] + st.uniform.rvs() * (interval[1] - interval[0]))
         return winnings
 
+    # Play for one session (until either out of money, or we've lose the max amount we're willing to lose)
     def one_session(self, money_in, wager, max_loss_per_session, time_limit, walk_away_win, wager_type='absolute',
-    initial_money=None, winning_bet=None, change_bet_win=None):
+                    initial_money=None, winning_bet=None, change_bet_win=None):
 
         def wager_calc(w, money):
-           return w if wager_type == 'absolute' else max(.01, w * money)
+            return w if wager_type == 'absolute' else max(.01, w * money)
 
         total_won = 0
         total_spins = 0
@@ -79,9 +87,12 @@ class SlotsModel(object):
         return total_spins, total_won, total_spent
 
 
+# Extension of SlotsModel, where probability distribution is set to that of Cleopatra
 class CleopatraModel(SlotsModel):
     def __init__(self, nlines=20):
         self.name = 'cleopatra'
+
+        # Either 20 lines or 1 line
         if nlines == 20:
             self.intervals = np.array([
                 [0., 0.2],
@@ -123,6 +134,9 @@ class CleopatraModel(SlotsModel):
             self.probabilities = 0.7233308569575265 * np.array(
             [8761210, 628815, 1008567, 544354, 273149, 82322, 52222, 8952, 1532, 411, 21, 6]
             ) / 100000000.
-        self.probabilities = np.array([1-np.sum(self.probabilities), *self.probabilities])
-        self.model = None
-        self.time_per_spin = 5
+        self.probabilities = np.array([1-np.sum(self.probabilities), *self.probabilities])  # adds to 1
+        self.model = None  # PMF initialized to None, create later...
+        self.time_per_spin = 5  # 5 seconds to spin
+
+        # superclass
+        SlotsModel.__init__(self, self.name, self.intervals, self.probabilities, self.time_per_spin)

@@ -8,8 +8,35 @@ The slots at the casino we go to roughly pay out 95\% of the money they take in 
 
 ### Task
 
-We will study two kinds of machines that vary in what is called **volatility** - basically the payout variance. Highly volatile machines pay out big but rarely, while low-volatility machines distribute small payouts more often but the jackpot is not as large. Low-volatility machines have become quite popular with casino owners in Vegas as the small payouts keep people hooked and playing for longer.
+We will play one game called Cleopatra by IGT (photo courtesy of [Wizard Of Odds](https://wizardofodds.com/games/slots/cleopatra/)).
 
-We will run many simulations on these types of machines, and see how the results change with our betting strategies. We will also consider what happens if we change the best size as we win, to see if we can improve our average returns.
+![cleopatra game](./cleopatra.png)
+
+We will study two versions of the game vary in what is called **volatility** - basically the payout variance. Highly volatile games pay out big but rarely, while low-volatility games distribute small payouts more often but the jackpot is not as large. Low-volatility machines have become quite popular with casino owners in Vegas as the small payouts keep people hooked and playing for longer.
+
+We will run many simulations and see how the results change with our betting strategies. We will also consider what happens if we change the best size as we win, to see if we can improve our average returns.
 
 You can view the Jupyter notebook with the results [here](https://nbviewer.jupyter.org/github/benmayersohn/penny-slots/blob/master/gambling.ipynb).
+
+If you would like to run simulations yourself, refer to the files in the `simulation_scripts` folder. I would recommend cloning this repository and installing (within a virtual environment) using
+
+```bash
+python setup.py install
+```
+
+### Directory Structure
+
+Below is a breakdown of the files in this repository.
+<pre class="language-bash"><code class="language-bash">
+penny-slots
+|____cleoslots            
+| |____slots_models.py      # contains SlotsModel/CleopatraModel classes 
+|____gambling.ipynb         # jupyter notebook
+|____cleopatra.png          # picture of the game
+|____setup.py               # for installation purposes
+|____output                 # directory with output of simulations
+|____README.md
+|____slots_models.py        # contains generic SlotsModel and CleopatraModel class
+|____simulation_scripts     # scripts for generating results stored in the output directory
+|____expected_values.py     # used for getting probability distributions to achieve desired RTP 
+</code></pre>
