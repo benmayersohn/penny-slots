@@ -47,16 +47,10 @@ setup(
     author_email=EMAIL,
     python_requires=REQUIRES_PYTHON,
     url=URL,
-    # packages=find_packages(exclude=["tests", "*.tests", "*.tests.*", "tests.*"]),
-    # If your package is a single module, use this instead of 'packages':
     py_modules=['slots_models'],
-
-    entry_points={
-        'console_scripts': ['mycli=mymodule:cli'],
-    },
     install_requires=REQUIRED,
     include_package_data=True,
-    license='MIT',
+    license='Freely Distributable',
     classifiers=[
         # Trove classifiers
         # Full list: https://pypi.python.org/pypi?%3Aaction=list_classifiers

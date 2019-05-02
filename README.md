@@ -27,8 +27,7 @@ python setup.py install
 ### Directory Structure
 
 Below is a breakdown of the files in this repository.
-<pre class="language-bash"><code class="language-bash">
-penny-slots
+<pre class="language-bash"><code class="language-bash">penny-slots
 |____cleoslots            
 | |____slots_models.py      # contains SlotsModel/CleopatraModel classes 
 |____gambling.ipynb         # jupyter notebook
@@ -36,7 +35,6 @@ penny-slots
 |____setup.py               # for installation purposes
 |____output                 # directory with output of simulations
 |____README.md
-|____slots_models.py        # contains generic SlotsModel and CleopatraModel class
 |____simulation_scripts     # scripts for generating results stored in the output directory
 |____expected_values.py     # used for getting probability distributions to achieve desired RTP 
 </code></pre>
