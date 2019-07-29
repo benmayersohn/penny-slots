@@ -10,24 +10,25 @@ from scipy.optimize import root_scalar
 
 desired_rtp = 0.95025
 
+nlines = 20
 
 # We only include entries from index 1 and on because index 0 corresponds to losing (i.e. winning 0)
-def expected(scale):
-    cleo = CleopatraModel(nlines=1)
+def expected(scale, nlines=1):
+    cleo = CleopatraModel(nlines=nlines)
     avg = np.array([np.mean(x) for x in cleo.intervals[1:]])
     probs = scale * cleo.probabilities[1:]
     return np.sum(avg * probs) - desired_rtp
 
 
 # For the line 1 model
-cleopatra = CleopatraModel(nlines=1)
+cleopatra = CleopatraModel(nlines=nlines)
 
 average = np.array([np.mean(x) for x in cleopatra.intervals[1:]])
 probabilities = cleopatra.probabilities[1:]
 print(probabilities)
 
 # find the proper scale
-proper_scale = root_scalar(expected, x0=.5, x1=.9).root
+proper_scale = root_scalar(expected, args=(nlines,), x0=.5, x1=.9).root
 print('The proper scale is {}'.format(proper_scale))
 probabilities *= proper_scale
 
